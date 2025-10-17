@@ -29,10 +29,9 @@ const ourQuery = qs.stringify({
 
 })
 
-  //const membersPromise = await fetch(`http://localhost:1337/api/team-members?${ourQuery}`)
-  const membersPromise = await fetch(`http://localhost:1337/api/team-members?${ourQuery}`)
+const membersPromise = await fetch(`http://localhost:1337/api/team-members?${ourQuery}`)
 const member = await membersPromise.json()
-console.log("member", member)
+//console.log("member", member)
 return member.data[0]
 }
 
@@ -51,10 +50,18 @@ function OurRenderer(item, index) {
   
 }
 
-
+export async function generateStaticParams() {
+  const membersPromise = await fetch("http://localhost:1337/api/team-members?populate=*")
+  const members = await membersPromise.json()
+  return members.data.map(member => {
+    return {
+      slug: member.slug
+    }
+  })
+}
 export default async function Page({params}) {
   const member = await fetchTeamMember(params.slug)
-  console.log(member)
+  //console.log(member)
   
    return (
     <div>
